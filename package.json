@@ -1,0 +1,16 @@
+{
+  "name": "forensight",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ForenSight AI - Multimodal forensic analysis platform",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  }
+}
+
