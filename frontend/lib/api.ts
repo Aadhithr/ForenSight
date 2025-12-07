@@ -1,4 +1,4 @@
-import { Case, EvidenceItem, CaseAnalysis, AnalysisProgress } from "./types";
+import { Case, EvidenceItem, CaseAnalysis, AnalysisProgress, WitnessPortrait, WitnessPortraitParams } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -129,6 +129,36 @@ export class ApiClient {
     });
     if (!res.ok) throw new Error("Failed to send chat message");
     return res.json();
+  }
+
+  // Witness Portraits
+  async generateWitnessPortrait(
+    caseId: string,
+    params: WitnessPortraitParams
+  ): Promise<WitnessPortrait> {
+    const res = await fetch(`${this.baseUrl}/cases/${caseId}/portraits`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ error: "Unknown error" }));
+      throw new Error(errorData.error || "Failed to generate portrait");
+    }
+    return res.json();
+  }
+
+  async getWitnessPortraits(caseId: string): Promise<WitnessPortrait[]> {
+    const res = await fetch(`${this.baseUrl}/cases/${caseId}/portraits`);
+    if (!res.ok) throw new Error("Failed to fetch portraits");
+    return res.json();
+  }
+
+  async deleteWitnessPortrait(caseId: string, portraitId: string): Promise<void> {
+    const res = await fetch(`${this.baseUrl}/cases/${caseId}/portraits/${portraitId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) throw new Error("Failed to delete portrait");
   }
 }
 

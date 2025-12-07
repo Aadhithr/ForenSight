@@ -115,6 +115,19 @@ export async function initializeDatabase() {
     )
   `);
 
+  // Witness portraits table
+  await dbRun(`
+    CREATE TABLE IF NOT EXISTS witness_portraits (
+      id TEXT PRIMARY KEY,
+      caseId TEXT NOT NULL,
+      params TEXT NOT NULL,
+      storageUrl TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY (caseId) REFERENCES cases(id) ON DELETE CASCADE
+    )
+  `);
+
   console.log("Database initialized successfully");
 }
 

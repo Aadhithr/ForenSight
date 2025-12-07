@@ -136,3 +136,76 @@ export interface AnalysisProgress {
   stepNumber?: number;
   totalSteps?: number;
 }
+
+// ============================================
+// Witness Portrait Types
+// ============================================
+
+export interface WitnessPortraitParams {
+  // Basic Info
+  name?: string;
+  description?: string;
+  
+  // Face Structure
+  faceShape: "oval" | "round" | "square" | "heart" | "oblong" | "diamond";
+  
+  // Skin
+  skinTone: "very_light" | "light" | "medium_light" | "medium" | "medium_dark" | "dark" | "very_dark";
+  skinUndertone?: "warm" | "cool" | "neutral";
+  
+  // Eyes
+  eyeShape: "almond" | "round" | "hooded" | "monolid" | "upturned" | "downturned";
+  eyeColor: "brown" | "blue" | "green" | "hazel" | "gray" | "amber" | "black";
+  eyeSize: "small" | "medium" | "large";
+  eyeSpacing?: "close" | "average" | "wide";
+  eyebrowShape?: "straight" | "arched" | "curved" | "flat" | "thick" | "thin";
+  eyebrowColor?: string;
+  
+  // Nose
+  noseShape: "straight" | "roman" | "button" | "upturned" | "wide" | "narrow" | "aquiline";
+  noseSize?: "small" | "medium" | "large";
+  
+  // Lips/Mouth
+  lipShape: "thin" | "full" | "heart" | "wide" | "bow" | "downturned";
+  lipColor?: "natural" | "pink" | "red" | "brown";
+  
+  // Hair
+  hairColor: "black" | "dark_brown" | "brown" | "light_brown" | "blonde" | "red" | "auburn" | "gray" | "white" | "bald";
+  hairStyle: "short" | "medium" | "long" | "buzz" | "bald" | "receding";
+  hairTexture: "straight" | "wavy" | "curly" | "coily";
+  
+  // Demographics
+  ageRange: "18-25" | "26-35" | "36-45" | "46-55" | "56-65" | "65+";
+  gender: "male" | "female";
+  ethnicity?: "caucasian" | "african" | "asian" | "hispanic" | "middle_eastern" | "south_asian" | "mixed";
+  
+  // Facial Hair (for males)
+  facialHair?: "none" | "stubble" | "short_beard" | "full_beard" | "mustache" | "goatee";
+  facialHairColor?: string;
+  
+  // Distinguishing Features
+  distinguishingFeatures?: {
+    scars?: { location: string; type: string }[];
+    moles?: { location: string }[];
+    freckles?: boolean;
+    glasses?: { type: "none" | "reading" | "sunglasses" | "round" | "rectangular" };
+    tattoos?: { location: string; description: string }[];
+    wrinkles?: "none" | "light" | "moderate" | "heavy";
+    dimples?: boolean;
+  };
+  
+  // Build/Expression
+  faceWidth?: "narrow" | "average" | "wide";
+  jawline?: "soft" | "defined" | "angular";
+  cheekbones?: "flat" | "average" | "prominent";
+  expression?: "neutral" | "slight_smile" | "serious";
+}
+
+export interface WitnessPortrait {
+  id: string;
+  caseId: string;
+  params: WitnessPortraitParams;
+  storageUrl: string;
+  createdAt: string;
+  description: string;
+}

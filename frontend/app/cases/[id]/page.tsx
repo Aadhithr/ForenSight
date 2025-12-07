@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Case, EvidenceItem, CaseAnalysis, AnalysisProgress } from "@/lib/types";
+import { Case, EvidenceItem, CaseAnalysis, AnalysisProgress, WitnessPortrait, WitnessPortraitParams } from "@/lib/types";
 import { apiClient } from "@/lib/api";
 import { EvidencePanel } from "@/components/EvidencePanel";
 import { TimelineView } from "@/components/TimelineView";
@@ -13,6 +13,8 @@ import { Heatmap } from "@/components/Heatmap";
 import { Contradictions } from "@/components/Contradictions";
 import { ReconstructionGallery } from "@/components/ReconstructionGallery";
 import { MediaReview } from "@/components/MediaReview";
+import { WitnessPortraitGenerator } from "@/components/WitnessPortraitGenerator";
+import { EvidenceGraph } from "@/components/EvidenceGraph";
 import { Button } from "@/components/ui/button";
 import {
   Play,
@@ -24,12 +26,13 @@ import {
   Image as ImageIcon,
   BarChart3,
   Eye,
+  User,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as Tabs from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 
-type TabId = "timeline" | "scenarios" | "reconstructions" | "media";
+type TabId = "timeline" | "scenarios" | "reconstructions" | "media" | "portraits";
 
 export default function CaseDashboardPage() {
   const params = useParams();
@@ -43,6 +46,7 @@ export default function CaseDashboardPage() {
   const [analyzing, setAnalyzing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>("timeline");
+  const [portraits, setPortraits] = useState<WitnessPortrait[]>([]);
 
   useEffect(() => {
     loadData();
@@ -50,12 +54,14 @@ export default function CaseDashboardPage() {
 
   const loadData = async () => {
     try {
-      const [caseData, evidenceData] = await Promise.all([
+      const [caseData, evidenceData, portraitsData] = await Promise.all([
         apiClient.getCase(caseId),
         apiClient.getEvidence(caseId),
+        apiClient.getWitnessPortraits(caseId).catch(() => []),
       ]);
       setCase(caseData);
       setEvidence(evidenceData);
+      setPortraits(portraitsData);
 
       // Try to load analysis if it exists
       try {
@@ -69,6 +75,16 @@ export default function CaseDashboardPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGeneratePortrait = async (params: WitnessPortraitParams) => {
+    const newPortrait = await apiClient.generateWitnessPortrait(caseId, params);
+    setPortraits((prev) => [newPortrait, ...prev]);
+  };
+
+  const handleDeletePortrait = async (id: string) => {
+    await apiClient.deleteWitnessPortrait(caseId, id);
+    setPortraits((prev) => prev.filter((p) => p.id !== id));
   };
 
   const startAnalysis = async () => {
@@ -170,6 +186,7 @@ export default function CaseDashboardPage() {
     { id: "timeline" as const, label: "Timeline & Analysis", icon: BarChart3 },
     { id: "scenarios" as const, label: "Scenarios", icon: FileText },
     { id: "reconstructions" as const, label: "4K Reconstructions", icon: ImageIcon },
+    { id: "portraits" as const, label: "Witness Portraits", icon: User },
     { id: "media" as const, label: "Media Review", icon: Eye },
   ];
 
@@ -305,6 +322,15 @@ export default function CaseDashboardPage() {
                     </p>
                   </div>
                 )}
+                
+                {/* Evidence Relationship Graph - at the bottom */}
+                {evidence.length > 0 && (
+                  <EvidenceGraph 
+                    evidence={evidence}
+                    timeline={analysis?.timeline}
+                    contradictions={analysis?.contradictions}
+                  />
+                )}
               </Tabs.Content>
 
               <Tabs.Content value="scenarios" className="space-y-6">
@@ -325,6 +351,15 @@ export default function CaseDashboardPage() {
               <Tabs.Content value="reconstructions" className="space-y-6">
                 <ReconstructionGallery
                   reconstructions={analysis?.reconstructions || []}
+                />
+              </Tabs.Content>
+
+              <Tabs.Content value="portraits" className="space-y-6">
+                <WitnessPortraitGenerator
+                  caseId={caseId}
+                  portraits={portraits}
+                  onGenerate={handleGeneratePortrait}
+                  onDelete={handleDeletePortrait}
                 />
               </Tabs.Content>
 

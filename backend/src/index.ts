@@ -7,6 +7,7 @@ import casesRouter from "./routes/cases";
 import evidenceRouter from "./routes/evidence";
 import analysisRouter from "./routes/analysis";
 import chatRouter from "./routes/chat";
+import portraitRouter from "./routes/portrait";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/cases", casesRouter);
 app.use("/cases", evidenceRouter);
 app.use("/cases", analysisRouter);
 app.use("/cases", chatRouter);
+app.use("/cases", portraitRouter);
 
 // Health check
 app.get("/health", (req, res) => {

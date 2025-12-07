@@ -121,3 +121,55 @@ export interface AnalysisProgress {
   totalSteps?: number;
 }
 
+// ============================================
+// Witness Portrait Types
+// ============================================
+
+export interface WitnessPortraitParams {
+  name?: string;
+  description?: string;
+  faceShape: "oval" | "round" | "square" | "heart" | "oblong" | "diamond";
+  skinTone: "very_light" | "light" | "medium_light" | "medium" | "medium_dark" | "dark" | "very_dark";
+  skinUndertone?: "warm" | "cool" | "neutral";
+  eyeShape: "almond" | "round" | "hooded" | "monolid" | "upturned" | "downturned";
+  eyeColor: "brown" | "blue" | "green" | "hazel" | "gray" | "amber" | "black";
+  eyeSize: "small" | "medium" | "large";
+  eyeSpacing?: "close" | "average" | "wide";
+  eyebrowShape?: "straight" | "arched" | "curved" | "flat" | "thick" | "thin";
+  eyebrowColor?: string;
+  noseShape: "straight" | "roman" | "button" | "upturned" | "wide" | "narrow" | "aquiline";
+  noseSize?: "small" | "medium" | "large";
+  lipShape: "thin" | "full" | "heart" | "wide" | "bow" | "downturned";
+  lipColor?: "natural" | "pink" | "red" | "brown";
+  hairColor: "black" | "dark_brown" | "brown" | "light_brown" | "blonde" | "red" | "auburn" | "gray" | "white" | "bald";
+  hairStyle: "short" | "medium" | "long" | "buzz" | "bald" | "receding";
+  hairTexture: "straight" | "wavy" | "curly" | "coily";
+  ageRange: "18-25" | "26-35" | "36-45" | "46-55" | "56-65" | "65+";
+  gender: "male" | "female";
+  ethnicity?: "caucasian" | "african" | "asian" | "hispanic" | "middle_eastern" | "south_asian" | "mixed";
+  facialHair?: "none" | "stubble" | "short_beard" | "full_beard" | "mustache" | "goatee";
+  facialHairColor?: string;
+  distinguishingFeatures?: {
+    scars?: { location: string; type: string }[];
+    moles?: { location: string }[];
+    freckles?: boolean;
+    glasses?: { type: "none" | "reading" | "sunglasses" | "round" | "rectangular" };
+    tattoos?: { location: string; description: string }[];
+    wrinkles?: "none" | "light" | "moderate" | "heavy";
+    dimples?: boolean;
+  };
+  faceWidth?: "narrow" | "average" | "wide";
+  jawline?: "soft" | "defined" | "angular";
+  cheekbones?: "flat" | "average" | "prominent";
+  expression?: "neutral" | "slight_smile" | "serious";
+}
+
+export interface WitnessPortrait {
+  id: string;
+  caseId: string;
+  params: WitnessPortraitParams;
+  storageUrl: string;
+  createdAt: string;
+  description: string;
+}
+
