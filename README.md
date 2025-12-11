@@ -11,7 +11,7 @@ https://youtu.be/Ip_bJENt94Y
   - Linux: `sudo apt-get install ffmpeg` or `sudo yum install ffmpeg`
   - Windows: Download from [ffmpeg.org](https://ffmpeg.org/download.html)
 
-## Setup
+## Setup & Running
 
 ### Quick Start
 
